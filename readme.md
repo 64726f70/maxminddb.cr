@@ -37,6 +37,10 @@ $ git clone https://github.com/64726f70/maxminddb.cr.git
 $ make test
 ```
 
+## Credit
+
+* [Shard::delef/maxminddb.cr](https://github.com/delef/maxminddb.cr)
+
 ## Contributors
 
 |Name|Creator|Maintainer|Contributor|
