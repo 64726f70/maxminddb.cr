@@ -16,7 +16,7 @@ module MaxMindDB
       value = yield key
 
       if full?
-        _storage = storage.clear
+        _storage = Immutable::Map(K, V).new
         self.storage = _storage
       end
 
