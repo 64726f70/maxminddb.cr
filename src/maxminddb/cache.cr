@@ -15,10 +15,13 @@ module MaxMindDB
 
       value = yield key
 
-      unless full?
-        _storage = storage.set key, value
+      if full?
+        _storage = storage.clear
         self.storage = _storage
       end
+
+      _storage = storage.set key, value
+      self.storage = _storage
 
       value
     end
