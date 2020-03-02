@@ -10,7 +10,7 @@
 * This repository has used the same license exactly as the upstream repository.
   * UpStream Repository (`1.2.2`, `2020-03-02 00:47:52.654185000 UTC`).
 
-## Additional improvements
+## Additional Improvements
 
 * Syntax cleanup.
 * No need for third-party dependencies.
