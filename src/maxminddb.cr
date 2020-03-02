@@ -1,4 +1,5 @@
 require "socket/address"
+require "immutable"
 require "./maxminddb/reader.cr"
 require "./maxminddb/version.cr"
 

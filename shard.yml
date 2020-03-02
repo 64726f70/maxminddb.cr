@@ -1,6 +1,10 @@
 name: maxminddb
 version: 0.1.0
 
+dependencies:
+  immutable:
+    github: lucaong/immutable
+
 authors:
   - 64726f70 <_@github.com>
   - delef <delef@ya.ru>

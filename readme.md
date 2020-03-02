@@ -14,6 +14,7 @@
 
 * Syntax cleanup.
 * No need for third-party dependencies.
+* Cache Thread-safe.
 * Safety inspection.
 
 ### Used as Shard
