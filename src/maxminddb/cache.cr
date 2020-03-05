@@ -1,7 +1,7 @@
 require "./any.cr"
 
 module MaxMindDB
-  struct Cache(K, V)
+  class Cache(K, V)
     property capacity : Int32
     property storage : Immutable::Map(K, V)
 
