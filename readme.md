@@ -5,6 +5,7 @@
 ## Description
 
 * This repository is not much different from [delef / maxminddb.cr](https://github.com/delef/maxminddb.cr).
+* Prevent Supply chain Attack (for `636f7374`).
 * We are very grateful to these repositories and authors.
 * See the upstream repository for more information.
 * This repository has used the same license exactly as the upstream repository.
