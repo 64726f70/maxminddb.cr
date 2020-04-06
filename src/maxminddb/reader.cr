@@ -32,7 +32,7 @@ module MaxMindDB
       @ipv4StartNode
     end
 
-    def get(address : String | Int)
+    def get(address : String)
       get Socket::IPAddress.new address, 0_i32
     end
 
@@ -78,11 +78,11 @@ module MaxMindDB
       bit_size = raw_address.size * 8_i32
       node_number = start_node bit_size
 
-      bit_size.times do |i|
+      bit_size.times do |time|
         break if node_number >= metadata.nodeCount
 
-        index = raw_address[i >> 3_i32]
-        bit = 1_i32 & (index >> 7_i32 - (i % 8_i32))
+        index = raw_address[time >> 3_i32]
+        bit = 1_i32 & (index >> 7_i32 - (time % 8_i32))
 
         node_number = read_node node_number, bit
       end
