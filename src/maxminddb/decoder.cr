@@ -9,7 +9,7 @@ module MaxMindDB
     property pointerTest : Bool
     property cache : Cache(Int32, Node)
 
-    private CACHE_MAX_CAPACITY    = 4096_i32
+    private MAX_CACHE_CAPACITY    = 4096_i32
     private SIZE_BASE_VALUES      = [0_i32, 29_i32, 285_i32, 65_821_i32]
     private POINTER_VALUE_OFFSETS = [0_i32, 0_i32, 1_i32 << 11_i32, (1_i32 << 19_i32) + ((1_i32) << 11_i32), 0_i32]
 
@@ -44,7 +44,7 @@ module MaxMindDB
     end
 
     def initialize(@buffer : Buffer, @pointerBase : Int32, capacity : Int32? = nil, @pointerTest : Bool = false)
-      @cache = Cache(Int32, Node).new capacity || CACHE_MAX_CAPACITY
+      @cache = Cache(Int32, Node).new capacity || MAX_CACHE_CAPACITY
     end
 
     def decode(offset : Int32) : Node
