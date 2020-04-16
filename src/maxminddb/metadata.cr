@@ -62,20 +62,20 @@ module MaxMindDB
       marker_index = buffer.rindex METADATA_START_MARKER
 
       if marker_index.nil?
-        raise InvalidDataBase.new "Metadata section not found. Is this a valid MaxMind DB file?"
+        raise DatabaseError.new "Metadata section not found. Is this a valid MaxMind DB file?"
       end
 
       start_offset = marker_index + METADATA_START_MARKER.size
       decoder = Decoder.new buffer, start_offset
       metadata = decoder.decode(start_offset).as_any
-      raise InvalidDataBase.new "Metadata is empty" if metadata.empty?
+      raise DatabaseError.new "Metadata is empty" if metadata.empty?
 
       @nodeCount = metadata["node_count"].as_i
       @recordSize = metadata["record_size"].as_i
       @nodeByteSize = @recordSize // 4_i32
       @searchTreeSize = @nodeCount * @nodeByteSize
       @ipVersion = metadata["ip_version"].as_i
-      raise InvalidDataBase.new "Unsupported record size" unless [24_i32, 28_i32, 32_i32].includes? @recordSize
+      raise DatabaseError.new "Unsupported record size" unless [24_i32, 28_i32, 32_i32].includes? @recordSize
 
       @databaseType = metadata["database_type"].as_s
       @description = metadata["description"].as_h.transform_values &.as_s

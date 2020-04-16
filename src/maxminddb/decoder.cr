@@ -54,7 +54,7 @@ module MaxMindDB
           io << "pointer larger than the database."
         end
 
-        raise InvalidDataBase.new message
+        raise DatabaseError.new message
       end
 
       buffer.position = offset
@@ -101,7 +101,7 @@ module MaxMindDB
       when .array?
         decode_array size
       when .container?
-        raise InvalidDataBase.new "Сontainers are not currently supported"
+        raise DatabaseError.new "Сontainers are not currently supported"
       when .end_marker?
         Node.new nil
       when .boolean?
@@ -110,7 +110,7 @@ module MaxMindDB
         decode_float size
       else
         message = String.build { |io| io << "Unknown or unexpected type: " << data_type.to_i.to_s }
-        raise InvalidDataBase.new message
+        raise DatabaseError.new message
       end
     end
 
@@ -139,7 +139,7 @@ module MaxMindDB
           io << type_number.to_s
         end
 
-        raise InvalidDataBase.new message
+        raise DatabaseError.new message
       end
 
       DataType.new type_number
@@ -206,7 +206,7 @@ module MaxMindDB
         io << "invalid size of double."
       end
 
-      raise InvalidDataBase.new message
+      raise DatabaseError.new message
     end
 
     private def decode_float(size : Int32) : Node
@@ -217,7 +217,7 @@ module MaxMindDB
         io << "invalid size of float."
       end
 
-      raise InvalidDataBase.new message
+      raise DatabaseError.new message
     end
 
     private def decode_bytes(size : Int32) : Node

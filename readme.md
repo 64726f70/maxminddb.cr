@@ -12,11 +12,11 @@
 
 ## Additional Improvements
 
-* [X] (Since version 0.10) - Syntax cleanup.
-* [X] (Since version 0.10) -  No need for third-party dependencies.
-* [X] (Since version 0.10) -  Cache Thread-safe.
-* [X] (Since version 0.10) - Safety inspection.
-* [X] (Since version 0.11) - Using Crystal 0.34 Datum Feature.
+* [X] \(Since version 0.10\) - Syntax cleanup.
+* [X] \(Since version 0.10\) -  No need for third-party dependencies.
+* [X] \(Since version 0.10\) -  Cache Thread-safe.
+* [X] \(Since version 0.10\) - Safety inspection.
+* [X] \(Since version 0.11\) - Using Crystal 0.34 Datum Feature.
 
 ### Used as Shard
 

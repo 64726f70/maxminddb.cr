@@ -1,3 +1,4 @@
+require "./ip_address.cr"
 require "./buffer.cr"
 require "./decoder.cr"
 require "./metadata.cr"
@@ -11,7 +12,7 @@ module MaxMindDB
     getter buffer : Buffer
 
     def self.new(database_path : String, capacity : Int32? = nil)
-      raise InvalidDataBase.new "Database not found" unless File.exists? database_path
+      raise DatabaseError.new "Database not found" unless File.exists? database_path
 
       new read_file(database_path), capacity
     end
@@ -32,12 +33,12 @@ module MaxMindDB
       @ipv4StartNode
     end
 
-    def get(address : String)
-      get Socket::IPAddress.new address, 0_i32
+    def get(address : String | Socket::IPAddress)
+      get IPAddress.new address
     end
 
-    def check_ip_type!(address : Socket::IPAddress)
-      case {metadata.ipVersion, address.family}
+    def check_address_type!(address : IPAddress)
+      case {metadata.ipVersion, address.ipAddress.family}
       when {4_i32, Socket::Family::INET6}
         message = String.build do |io|
           io << "Error looking up " << "'" << address.to_s << "'" << ". "
@@ -48,8 +49,8 @@ module MaxMindDB
       end
     end
 
-    def get(address : Socket::IPAddress)
-      check_ip_type! address
+    def get(address : IPAddress) : Any
+      check_address_type! address
 
       pointer = find_address_in_tree address
       return resolve_data_pointer pointer if 0_i32 < pointer
@@ -71,8 +72,8 @@ module MaxMindDB
       bytes
     end
 
-    private def find_address_in_tree(address : Socket::IPAddress) : Int32
-      raise InvalidAddress.new unless raw_address = MaxMindDB.ip_address_to_bytes address
+    private def find_address_in_tree(address : IPAddress) : Int32
+      raise IPAddressError.new unless raw_address = address.to_bytes
 
       # raw_address = address.data
       bit_size = raw_address.size * 8_i32
@@ -90,7 +91,7 @@ module MaxMindDB
       return 0_i32 if node_number == metadata.nodeCount
       return node_number if node_number > metadata.nodeCount
 
-      raise InvalidDataBase.new "Something bad happened"
+      raise DatabaseError.new "Something bad happened"
     end
 
     private def start_node(bit_size) : Int32
@@ -130,7 +131,7 @@ module MaxMindDB
       else
         message = String.build { |io| io << "Unknown record size: " << metadata.recordSize.to_s }
 
-        raise InvalidDataBase.new message
+        raise DatabaseError.new message
       end
     end
 
@@ -143,7 +144,7 @@ module MaxMindDB
           io << "contains pointer larger than the database."
         end
 
-        raise InvalidDataBase.new message
+        raise DatabaseError.new message
       end
 
       decoder.decode(offset).as_any

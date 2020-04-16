@@ -5,10 +5,10 @@ require "./maxminddb/reader.cr"
 require "./maxminddb/version.cr"
 
 module MaxMindDB
-  class InvalidDataBase < Exception
+  class DatabaseError < Exception
   end
 
-  class InvalidAddress < Exception
+  class IPAddressError < Exception
   end
 
   def self.open(input : String | Bytes | IO::Memory, capacity : Int32? = nil)
