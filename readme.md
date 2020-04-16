@@ -17,6 +17,7 @@
 * No need for third-party dependencies.
 * Cache Thread-safe.
 * Safety inspection.
+* Using Crystal 0.34 Datum Feature.
 
 ### Used as Shard
 
