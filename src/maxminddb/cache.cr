@@ -1,32 +1,30 @@
 require "./any.cr"
 
-module MaxMindDB
-  class Cache(K, V)
-    property capacity : Int32
-    property storage : Immutable::Map(K, V)
+class MaxMindDB::Cache(K, V)
+  property capacity : Int32
+  property storage : Immutable::Map(K, V)
 
-    def initialize(@capacity : Int32)
-      @storage = Immutable::Map(K, V).new
+  def initialize(@capacity : Int32)
+    @storage = Immutable::Map(K, V).new
+  end
+
+  def fetch(key : K, &block : K -> V) : V
+    value = storage[key]?
+    return value if value
+
+    value = yield key
+
+    unless capacity.zero?
+      self.storage = Immutable::Map(K, V).new if full?
+
+      _storage = storage.set key, value
+      self.storage = _storage
     end
 
-    def fetch(key : K, &block : K -> V) : V
-      value = storage[key]?
-      return value if value
+    value
+  end
 
-      value = yield key
-
-      unless capacity.zero?
-        self.storage = Immutable::Map(K, V).new if full?
-
-        _storage = storage.set key, value
-        self.storage = _storage
-      end
-
-      value
-    end
-
-    def full?
-      storage.size >= capacity
-    end
+  def full?
+    storage.size >= capacity
   end
 end
