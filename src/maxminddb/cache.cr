@@ -2,10 +2,12 @@ require "./any.cr"
 
 class MaxMindDB::Cache(K, V)
   property capacity : Int32
-  property storage : Immutable::Map(K, V)
+  property storage : Hash(K, V)
+  property mutex : Mutex
 
   def initialize(@capacity : Int32)
-    @storage = Immutable::Map(K, V).new
+    @storage = Hash(K, V).new
+    @mutex = Mutex.new :unchecked
   end
 
   def fetch(key : K, &block : K -> V) : V
@@ -13,18 +15,17 @@ class MaxMindDB::Cache(K, V)
     return value if value
 
     value = yield key
+    return value if capacity.zero?
 
-    unless capacity.zero?
-      self.storage = Immutable::Map(K, V).new if full?
-
-      _storage = storage.set key, value
-      self.storage = _storage
+    @mutex.synchronize do
+      self.storage.clear if full?
+      self.storage[key] = value
     end
 
     value
   end
 
   def full?
-    storage.size >= capacity
+    capacity <= storage.size
   end
 end
