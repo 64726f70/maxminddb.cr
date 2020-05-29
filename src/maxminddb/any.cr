@@ -1,5 +1,5 @@
 struct MaxMindDB::Any
-  Crystal.datum types: {nil: Nil, bool: Bool, s: String, i: Int32, u16: UInt16, u32: UInt32, u64: UInt64, u128: UInt128, f: Float32, f64: Float64}, hash_key_type: String, immutable: false
+  Crystal.datum types: {nil: Nil, bool: Bool, s: String, i: Int32, u16: UInt16, u32: UInt32, u64: UInt64, u128: UInt128, f: Float64, f32: Float32}, hash_key_type: String, immutable: false
 
   def initialize(@raw : Type)
   end
