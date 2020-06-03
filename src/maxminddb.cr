@@ -10,7 +10,7 @@ module MaxMindDB
   class IPAddressError < Exception
   end
 
-  def self.open(input : String | Bytes | IO::Memory, capacity : Int32? = nil)
+  def self.new(input : String | Bytes | IO::Memory, capacity : Int32? = nil)
     Reader.new input, capacity
   end
 end
