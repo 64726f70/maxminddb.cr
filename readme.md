@@ -28,6 +28,7 @@
 * [X] \(Since version 0.1.0\) -  Cache Thread-safe.
 * [X] \(Since version 0.1.0\) - Safety inspection.
 * [X] \(Since version 0.1.1\) - Using Crystal 0.34 Datum Feature.
+* [X] \(Since version 0.1.5\) - Available: Crystal 0.35.0.
 
 ### Used as Shard
 
