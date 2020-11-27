@@ -10,8 +10,12 @@ class MaxMindDB::Cache(K, V)
     @mutex = Mutex.new :unchecked
   end
 
+  def get?(key : K) : V?
+    @mutex.synchronize { storage[key]? }
+  end
+
   def fetch(key : K, &block : K -> V) : V
-    value = storage[key]?
+    value = get? key
     return value if value
 
     value = yield key
