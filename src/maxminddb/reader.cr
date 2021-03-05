@@ -1,4 +1,3 @@
-require "./ip_address.cr"
 require "./buffer.cr"
 require "./decoder.cr"
 require "./metadata.cr"
@@ -36,12 +35,21 @@ class MaxMindDB::Reader
     @ipv4StartNode
   end
 
-  def get(address : String | Socket::IPAddress)
-    get IPAddress.new address
+  def get(address : String)
+    get Socket::IPAddress.new address: address, port: 0_i32
   end
 
-  def check_address_type!(address : IPAddress)
-    case {metadata.ipVersion, address.ipAddress.family}
+  def get(address : Socket::IPAddress) : Any
+    check_address_type! address
+
+    pointer = find_address_in_tree address
+    return resolve_data_pointer pointer if 0_i32 < pointer
+
+    Any.new Hash(String, Any).new
+  end
+
+  def check_address_type!(address : Socket::IPAddress)
+    case {metadata.ipVersion, address.family}
     when {4_i32, Socket::Family::INET6}
       message = String.build do |io|
         io << "Error looking up " << "'" << address.to_s << "'" << ". "
@@ -50,15 +58,6 @@ class MaxMindDB::Reader
 
       raise ArgumentError.new message
     end
-  end
-
-  def get(address : IPAddress) : Any
-    check_address_type! address
-
-    pointer = find_address_in_tree address
-    return resolve_data_pointer pointer if 0_i32 < pointer
-
-    Any.new Hash(String, Any).new
   end
 
   def inspect(io : IO)
@@ -75,8 +74,8 @@ class MaxMindDB::Reader
     bytes
   end
 
-  private def find_address_in_tree(address : IPAddress) : Int32
-    raise IPAddressError.new unless raw_address = address.to_bytes
+  private def find_address_in_tree(address : Socket::IPAddress) : Int32
+    raise IPAddressError.new unless raw_address = address.to_slice
 
     # raw_address = address.data
     bit_size = raw_address.size * 8_i32
