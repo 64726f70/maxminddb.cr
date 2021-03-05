@@ -25,7 +25,7 @@
 
 * [X] \(Since version 0.1.0\) - Syntax cleanup.
 * [X] \(Since version 0.1.0\) -  No need for third-party dependencies.
-* [X] \(Since version 0.1.0\) -  Cache Thread-safe.
+* [X] \(Since version 0.1.0\) -  Caching Thread-safe.
 * [X] \(Since version 0.1.0\) - Safety inspection.
 * [X] \(Since version 0.1.1\) - Using Crystal 0.34 Datum Feature.
 * [X] \(Since version 0.1.5\) - Available: Crystal 0.35.0.

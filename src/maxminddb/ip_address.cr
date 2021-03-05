@@ -1,4 +1,4 @@
-class MaxMindDB::IPAddress
+struct MaxMindDB::IPAddress
   property ipAddress : Socket::IPAddress
 
   def initialize(@ipAddress : Socket::IPAddress)

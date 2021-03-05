@@ -1,10 +1,6 @@
 name: maxminddb
 version: 0.1.5
 
-dependencies:
-  wrench:
-    github: 73686f77/wrench.cr
-
 authors:
   - 64726f70 <_@github.com>
   - delef <delef@ya.ru>

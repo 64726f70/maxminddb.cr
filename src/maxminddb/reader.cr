@@ -10,18 +10,22 @@ class MaxMindDB::Reader
   getter decoder : Decoder
   getter buffer : Buffer
 
-  def self.new(database_path : String, capacity : Int32? = nil)
-    raise DatabaseError.new "Database not found" unless File.exists? database_path
-
-    new read_file(database_path), capacity
-  end
-
-  def initialize(database : Bytes | IO::Memory, capacity : Int32? = nil)
-    @buffer = Buffer.new database.to_slice
+  def initialize(slice : Bytes, capacity : Int32? = nil)
+    @buffer = Buffer.new slice.to_slice
     @metadata = Metadata.new @buffer
 
     pointer_base = @metadata.searchTreeSize + DATA_SEPARATOR_SIZE
     @decoder = Decoder.new @buffer, pointer_base, capacity
+  end
+
+  def self.new(path : String, capacity : Int32? = nil)
+    raise DatabaseError.new "Database not found" unless File.exists? path
+
+    new read_file(path), capacity
+  end
+
+  def self.new(io : IO::Memory, capacity : Int32? = nil)
+    new slice: io.to_slice, capacity: capacity
   end
 
   def ipv4_start_node=(value : Int32)

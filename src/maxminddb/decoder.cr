@@ -1,12 +1,12 @@
 require "./any.cr"
-require "./cache.cr"
+require "./caching.cr"
 
 class MaxMindDB::Decoder
   property buffer : Buffer
   property pointerBase : Int32
   property capacity : Int32?
   property pointerTest : Bool
-  property cache : Cache(Int32, Node)
+  property caching : Caching(Int32, Node)
 
   private MAX_CACHE_CAPACITY    = 4096_i32
   private SIZE_BASE_VALUES      = [0_i32, 29_i32, 285_i32, 65_821_i32]
@@ -43,7 +43,7 @@ class MaxMindDB::Decoder
   end
 
   def initialize(@buffer : Buffer, @pointerBase : Int32, capacity : Int32? = nil, @pointerTest : Bool = false)
-    @cache = Cache(Int32, Node).new capacity || MAX_CACHE_CAPACITY
+    @caching = Caching(Int32, Node).new capacity || MAX_CACHE_CAPACITY
   end
 
   def decode(offset : Int32) : Node
@@ -77,37 +77,37 @@ class MaxMindDB::Decoder
   # The data payload always comes at the end of the field.
   private def decode_by_type(data_type : DataType, size : Int32) : Node
     case data_type
-    when .pointer?
+    in .pointer?
       decode_pointer size
-    when .utf8?
+    in .utf8?
       decode_string size
-    when .double?
+    in .double?
       decode_double size
-    when .bytes?
+    in .bytes?
       decode_bytes size
-    when .uint16?
+    in .uint16?
       decode_uint16 size
-    when .uint32?
+    in .uint32?
       decode_uint32 size
-    when .uint64?
+    in .uint64?
       decode_uint64 size
-    when .uint128?
+    in .uint128?
       decode_uint128 size
-    when .map?
+    in .map?
       decode_map size
-    when .int32?
+    in .int32?
       decode_int32 size
-    when .array?
+    in .array?
       decode_array size
-    when .container?
+    in .container?
       raise DatabaseError.new "Сontainers are not currently supported"
-    when .end_marker?
+    in .end_marker?
       Node.new nil
-    when .boolean?
+    in .boolean?
       Node.new !size.zero?
-    when .float?
+    in .float?
       decode_float size
-    else
+    in .extended?
       message = String.build { |io| io << "Unknown or unexpected type: " << data_type.to_i.to_s }
       raise DatabaseError.new message
     end
@@ -117,7 +117,6 @@ class MaxMindDB::Decoder
   # the field’s data type and payload size.
   private def size_from_ctrl_byte(ctrl_byte : Int32, data_type : DataType) : Int32
     size = ctrl_byte & 0x1f_i32
-
     return size if data_type.pointer? || size < 29_i32
 
     bytes_size = size - 28_i32
@@ -155,7 +154,7 @@ class MaxMindDB::Decoder
     return Node.new pointer if pointerTest
 
     position = buffer.position
-    node = cache.fetch(pointer) { |offset| decode offset }
+    node = caching.fetch(pointer) { |offset| decode offset }
     buffer.position = position
 
     node
