@@ -1,9 +1,9 @@
 name: maxminddb
-version: 0.1.5
+version: 1.0.0
 
 authors:
   - 64726f70 <_@github.com>
   - delef <delef@ya.ru>
 
-crystal: 1.0.0
+crystal: ">= 1.0.0"
 license: MIT
