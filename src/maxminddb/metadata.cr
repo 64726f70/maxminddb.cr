@@ -84,6 +84,6 @@ struct MaxMindDB::Metadata
     @binaryFormatMajorVersion = metadata["binary_format_major_version"].as_i
     @binaryFormatMinorVersion = metadata["binary_format_minor_version"].as_i
 
-    @version = String.build { |io| io << @binaryFormatMajorVersion << "." << @binaryFormatMinorVersion }
+    @version = String.build { |io| io << @binaryFormatMajorVersion << '.' << @binaryFormatMinorVersion }
   end
 end
